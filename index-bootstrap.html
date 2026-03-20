@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Carta de Serviços ao Usuário v2</title>
-
+    <link rel="stylesheet" href="style_bootstrap.css">
     <!-- BOOTSTRAP CSS (CDN) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
@@ -17,14 +17,14 @@
 <body class="bg-light">
 
     <!-- =========================
-       HEADER
-  ========================== -->
+       HEADER ========================== -->
+
     <header class="bg-white shadow-sm py-3 mb-4">
         <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between">
 
             <div class="d-flex align-items-center gap-3">
-                <img src="17_brasao.png" alt="Logofw-bold">
-                Carta de Serviços ao Usuário
+                <img src="17_brasao.png" alt="Logofw-bold" class="logo-prefeitura-bootstrap">
+                <h1 lass="h4 mb-0 text-primary fw-bold"> Carta de Serviços ao Usuário
                 </h1>
             </div>
 
@@ -33,13 +33,11 @@
                 <strong id="dataAtualizacao">--/--/----</strong>
             </div>
         </div>
-        
-<div class="container text-center my-3">
-<a href="index.html" class="versão atual">Versao atual</a>
-</div>
-
-
     </header>
+
+  <div class="container text-center my-3">
+            <a href="index.html" class="btn btn-sm btn-outline-secondary">Versao atual</a>
+        </div>
 
     <!-- =========================
        TÍTULO
@@ -82,7 +80,6 @@
   ========================== -->
     <div class="container mb-5">
         <div class="accordion" id="listaServicos">
-            <!-- JS VAI INJETAR OS SERVIÇOS AQUI -->
         </div>
     </div>
 

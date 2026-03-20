@@ -1,0 +1,85 @@
+/* Cores institucionais – Sapezal (sugestão) */
+:root {
+  --bs-primary: #0b4da2;        /* azul institucional */
+  --bs-primary-rgb: 11, 77, 162;
+
+  --bs-secondary: #6c757d;      /* cinza Bootstrap padrão */
+  --bs-light: #f8f9fa;          /* fundo claro */
+  --bs-dark: #1f2937;           /* texto principal */
+
+  --azul-claro: #e7f0fb;      /* fundo suave */
+
+   /* cores spz */
+  --verde-turquesa: #3bb7a4;
+  --verde-turquesa-escuro: #2fa393;
+  --verde-turquesa-bg: #e9f7f4;
+
+}
+
+
+.logo-prefeitura-bootstrap {
+  height: 46px;
+  max-width: 140px;
+  width: auto;
+  object-fit:contain;
+}
+  /* Borda dos filtros – verde turquesa institucional */
+  .form-select {
+    border: 1.5px solid #3bb7a4;
+  }
+
+  .form-select:focus {
+    border-color: #2fa393;
+    box-shadow: 0 0 0 0.15rem rgba(59, 183, 164, 0.25);
+  }
+
+  
+.accordion-item {
+  border: 1px solid var(--verde-turquesa);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+
+.accordion-button {
+  color: #0b4da2; /* azul institucional */
+  font-weight: 600;
+  background-color: #ffffff;
+  padding: 14px 16px;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: var(--verde-turquesa-bg);
+  color: #0b4da2;
+}
+
+
+.accordion-button::after {
+  filter: hue-rotate(90deg);
+}
+
+
+.accordion-button:focus {
+  box-shadow: 0 0 0 0.2rem rgba(59, 183, 164, 0.35);
+  border-color: var
+}
+
+
+.accordion-body {
+  background-color: #ffffff;
+  padding: 16px;
+  font-size: 0.95rem
+}
+@media (max-width: 768px) {
+
+  .accordion-button {
+    padding: 16px;
+    font-size: 0.95rem;
+  }
+
+  .accordion-body {
+    font-size: 0.9rem;
+  }
+
+}

@@ -71,6 +71,24 @@
   padding: 16px;
   font-size: 0.95rem
 }
+  /* =========================
+   LINHAS ALTERNADAS NO ACCORDION
+========================= */
+.accordion-body .row {
+  padding: 6px 4px;
+  border-radius: 4px;
+}
+
+/* linhas pares */
+.accordion-body .row:nth-child(even) {
+  background-color: #f1fbf9; /* verde-turquesa bem claro */
+}
+
+/* linhas ímpares */
+.accordion-body .row:nth-child(odd) {
+  background-color: #ffffff;
+}
+
 @media (max-width: 768px) {
 
   .accordion-button {

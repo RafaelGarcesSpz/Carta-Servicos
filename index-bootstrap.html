@@ -48,33 +48,51 @@
         </h2>
     </div>
 
-    <!-- =========================
-       FILTROS
-  ========================== -->
-    <div class="container mb-4">
-        <div class="row g-3">
+<!--FILTROS DE SERVIÇOS-->
+<div class="container mb-4">
+  <div class="row g-3">
 
-            <div class="col-12 col-md-4">
-                <select id="filtroSecretaria" class="form-select">
-                    <option value="">Todas as Secretarias</option>
-                </select>
-            </div>
-
-            <div class="col-12 col-md-4">
-                <select id="filtroUnidade" class="form-select">
-                    <option value="">Todas as Unidades</option>
-                </select>
-            </div>
-
-            <div class="col-12 col-md-4">
-                <select id="filtroServico" class="form-select">
-                    <option value="">Todos os Serviços</option>
-                </select>
-            </div>
-
-        </div>
+    <!-- CAMPO DE BUSCA -->
+    <div class="col-12 col-md-6">
+      <input
+        type="text"
+        id="buscaServico"
+        class="form-control"
+        placeholder="Buscar serviço por nome ou palavra-chave"
+      >
     </div>
 
+    <!-- SECRETARIA -->
+    <div class="col-12 col-md-6 col-lg-2">
+      <select id="filtroSecretaria" class="form-select">
+        <option value="">Todas as Secretarias</option>
+      </select>
+    </div>
+
+    <!-- UNIDADE -->
+    <div class="col-12 col-md-6 col-lg-2">
+      <select id="filtroUnidade" class="form-select">
+        <option value="">Todas as Unidades</option>
+      </select>
+    </div>
+
+    <!-- SERVIÇO -->
+    <div class="col-12 col-md-6 col-lg-2">
+      <select id="filtroServico" class="form-select">
+        <option value="">Todos os Serviços</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+<div class="container mb-3">
+  <div id="contadorResultados" class="text-muted small">
+    </div>
+</div>
+
+    <!-- JS preenche -->
+  
     <!-- =========================
        ACCORDION (BOOTSTRAP)
   ========================== -->

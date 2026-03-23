@@ -15,6 +15,20 @@
   --verde-turquesa-bg: #e9f7f4;
 
 }
+/* Destaque do termo buscado no título */
+mark.destaque-busca {
+  background-color: #fff3a0; /* amarelo suave */
+  color: #000;
+  padding: 0 4
+}
+
+
+ mark.destaque-busca {
+  background-color: #fff3a0; /* amarelo suave */
+  color: #000;
+  padding: 0 3px;
+  border-radius: 3px;
+}
 
 
 .logo-prefeitura-bootstrap {
@@ -89,6 +103,9 @@
   background-color: #ffffff;
 }
 
+/* Destaque do termo buscado */
+
+
 @media (max-width: 768px) {
 
   .accordion-button {
@@ -100,4 +117,14 @@
     font-size: 0.9rem;
   }
 
+}
+
+/* Campo de busca */
+#buscaServico {
+  border: 1.5px solid #3bb7a4;
+}
+
+#buscaServico:focus {
+  border-color: #2fa393;
+  box-shadow: 0 0 0 0.15rem rgba(59, 183, 164, 0.25);
 }

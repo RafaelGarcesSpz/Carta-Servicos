@@ -139,3 +139,43 @@
   background-color: #3bb7a4;
   color: #fff;
 }
+
+/* Footer institucional */
+/* FOOTER INSTITUCIONAL – SAPEZAL */
+.footer-sapezal {
+  background-color: #1f2d3d; /* azul petróleo */
+  color: #ffffff;
+}
+
+/* TÍTULOS */
+.footer-titulo {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #3bb7a4; /* verde-turquesa */
+  margin-bottom: 6px;
+}
+
+/* TEXTO */
+.footer-texto {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* LINKS */
+.footer-link {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+}
+
+/* CRÉDITOS */
+.footer-creditos {
+  border-top: 1px solid rgba(255,255,255,0.15);
+  font-size: 0.75rem;          /* 🔹 bem menor */
+  color: rgba(255,255,255,0.75);
+  text-align: center;
+}

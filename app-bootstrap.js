@@ -40,19 +40,14 @@ function destacarTitulo(textoOriginal, termoBusca) {
   const termo = termoBusca.trim();
   if (!termo) return textoOriginal;
 
-  // Escapa caracteres especiais do regex
+  // escapa caracteres especiais do termo
   const termoEscapado = termo.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-  // Regex case-insensitive, literal
+  // regex literal, case-insensitive
   const regex = new RegExp(termoEscapado, "gi");
 
-  // Só destaca se houver correspondência literal
-  if (!regex.test(textoOriginal)) {
-    return textoOriginal;
-  }
-
   return textoOriginal.replace(regex, match => {
-    return `<mark class="destaque-busca">${match}</mark>`;
+    return `<span class="destaque-texto">${match}</span>`;
   });
 }
 
@@ -85,9 +80,29 @@ function inicializarFiltros() {
   filtroServico.addEventListener("change", aplicarFiltros);
   document.getElementById("buscaServico")
   .addEventListener("input", aplicarFiltros);
-
-  
+  document
+    .getElementById("btnLimparFiltros")
+    .addEventListener("click", limparFiltros)
 }
+
+function limparFiltros() {
+  // limpa campo de busca
+  document.getElementById("buscaServico").value = "";
+
+  // limpa selects
+  filtroSecretaria.value = "";
+  filtroUnidade.innerHTML = `<option value="">Todas</option>`;
+  filtroServico.innerHTML = `<option value="">Todos</option>`;
+
+  // recarrega filtros iniciais
+  preencherSecretarias();
+
+  // renderiza todos os serviços
+  renderizarServicos(dados);
+
+  // atualiza contador
+  atualizarContador(dados.length, "");
+};
 
 function preencherSecretarias() {
   preencherSelect(
@@ -191,48 +206,83 @@ function aplicarFiltros() {
 ========================= */
 function renderizarServicos(lista) {
   const container = document.getElementById("listaServicos");
-
   container.innerHTML = "";
+
+  // termo de busca (normalizado)
+  const termoBusca = document
+    .getElementById("buscaServico")
+    ?.value
+    ?.trim() || "";
+
+  const termoNormalizado = normalizarTexto(termoBusca);
 
   lista.forEach((registro, index) => {
     const item = document.createElement("div");
     item.className = "accordion-item";
 
+    /* =========================
+       VERIFICA SE CORRESPONDE À BUSCA
+    ========================== */
+    let correspondeBusca = false;
+
+    if (termoNormalizado) {
+      const tituloNormalizado = normalizarTexto(
+        registro[CHAVE_SERVICO] || ""
+      );
+
+      correspondeBusca = tituloNormalizado.includes(termoNormalizado);
+    }
+
+    // aplica destaque por BORDA se houver busca
+    if (correspondeBusca) {
+      item.classList.add("servico-destaque");
+    }
+
+    /* =========================
+       IDs DO ACCORDION
+    ========================== */
     const headerId = `heading-${index}`;
     const collapseId = `collapse-${index}`;
 
-   
+    /* =========================
+       TÍTULO DO SERVIÇO (SEM DESTAQUE DE TEXTO)
+    ========================== */
+    const tituloServico =
+      registro[CHAVE_SERVICO] || "Serviço";
 
-const tituloOriginal = registro[CHAVE_SERVICO] || "Serviço";
+    /* =========================
+       MONTA HTML
+    ========================== */
+    item.innerHTML = `
+      <h2 class="accordion-header" id="${headerId}">
+        <button
+          class="accordion-button collapsed fw-semibold"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#${collapseId}"
+          aria-expanded="false"
+          aria-controls="${collapseId}"
+        >
+          ${tituloServico}
+        </button>
+      </h2>
 
-const tituloComDestaque = destacarTitulo(
-  tituloOriginal,
-  document.getElementById("buscaServico").value
-);
-
-  item.innerHTML = `
-    <h2 class="accordion-header">
-      <button
-        class="accordion-button collapsed fw-semibold"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#${collapseId}">
-        ${tituloComDestaque}
-      </button>
-    </h2>
-      <div id="${collapseId}"
+      <div
+        id="${collapseId}"
         class="accordion-collapse collapse"
-        data-bs-parent="#listaServicos">
+        aria-labelledby="${headerId}"
+        data-bs-parent="#listaServicos"
+      >
         <div class="accordion-body">
           ${Object.entries(registro)
-            .filter(([c, v]) => v && c !== CHAVE_SERVICO)
-            .map(([c, v]) => `
+            .filter(([chave, valor]) => valor && chave !== CHAVE_SERVICO)
+            .map(([chave, valor]) => `
               <div class="row mb-2">
                 <div class="col-12 col-md-4 fw-semibold text-primary">
-                  ${c}
+                  ${chave}
                 </div>
                 <div class="col-12 col-md-8">
-                 ${v}
+                  ${valor}
                 </div>
               </div>
             `).join("")}
@@ -242,17 +292,7 @@ const tituloComDestaque = destacarTitulo(
 
     container.appendChild(item);
   });
-  
-    if (lista.length === 0) {
-    container.innerHTML = `
-      <div class="alert alert-info text-center">
-        Nenhum serviço encontrado com os critérios informados.
-      </div>
-    `;
-    return;
-  }
 }
-
 
 
 function atualizarContador(total, termoBusca = "") {

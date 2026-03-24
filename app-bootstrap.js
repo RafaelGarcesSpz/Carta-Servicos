@@ -62,13 +62,32 @@ fetch("servicos.json")
     inicializarFiltros();
     renderizarServicos(dados);
     atualizarData();
+    atualizarEstadoFiltros();
   });
 
 function atualizarData() {
   document.getElementById("dataAtualizacao").textContent =
     new Date().toLocaleDateString("pt-BR");
-}
+};
 
+// modificar habilitação do filtro 
+function atualizarEstadoFiltros() {
+  // Unidade depende APENAS da Secretaria
+  if (filtroSecretaria.value) {
+    filtroUnidade.disabled = false;
+  } else {
+    filtroUnidade.disabled = true;
+    filtroUnidade.value = "";
+  }
+
+  // Serviço depende APENAS da Unidade
+  if (filtroUnidade.value) {
+    filtroServico.disabled = false;
+  } else {
+    filtroServico.disabled = true;
+    filtroServico.value = "";
+  }
+};
 /* =========================
    FILTROS ANINHADOS
 ========================= */
@@ -83,7 +102,7 @@ function inicializarFiltros() {
   document
     .getElementById("btnLimparFiltros")
     .addEventListener("click", limparFiltros)
-}
+};
 
 function limparFiltros() {
   // limpa campo de busca
@@ -97,11 +116,13 @@ function limparFiltros() {
   // recarrega filtros iniciais
   preencherSecretarias();
 
+  atualizarEstadoFiltros();
   // renderiza todos os serviços
   renderizarServicos(dados);
-
+ 
   // atualiza contador
   atualizarContador(dados.length, "");
+ 
 };
 
 function preencherSecretarias() {
@@ -117,7 +138,7 @@ function preencherUnidades(secretaria) {
     .map(d => d[CHAVE_UNIDADE]);
 
   preencherSelect(filtroUnidade, unidades);
-}
+};
 
 function preencherServicos(secretaria, unidade) {
   const servicos = dados
@@ -128,7 +149,7 @@ function preencherServicos(secretaria, unidade) {
     .map(d => d[CHAVE_SERVICO]);
 
   preencherSelect(filtroServico, servicos);
-}
+};
 
 function preencherSelect(select, valores) {
   select.innerHTML = `<option value="">Todos</option>`;
@@ -139,21 +160,22 @@ function preencherSelect(select, valores) {
     option.textContent = v;
     select.appendChild(option);
   });
-}
+};
 
 function onSecretariaChange() {
   const secretaria = filtroSecretaria.value;
 
   filtroUnidade.innerHTML = `<option value="">Todas</option>`;
   filtroServico.innerHTML = `<option value="">Todos</option>`;
-
+  filtroServico.disabled = true;
   if (secretaria) {
     preencherUnidades(secretaria);
-    preencherServicos(secretaria, null);
+    
   }
-
+  atualizarEstadoFiltros();
   aplicarFiltros();
-}
+  
+};
 
 function onUnidadeChange() {
   const secretaria = filtroSecretaria.value;
@@ -164,9 +186,9 @@ function onUnidadeChange() {
   if (unidade) {
     preencherServicos(secretaria, unidade);
   }
-
+  atualizarEstadoFiltros();
   aplicarFiltros();
-}
+};
 
 // aplicar os filtros de busca
 
@@ -198,7 +220,8 @@ function aplicarFiltros() {
   renderizarServicos(filtrados);
   atualizarContador(filtrados.length, buscaServico.value);
 
-}
+};
+
 
 
 /* =========================
@@ -292,7 +315,7 @@ function renderizarServicos(lista) {
 
     container.appendChild(item);
   });
-}
+};
 
 
 function atualizarContador(total, termoBusca = "") {
@@ -312,4 +335,4 @@ function atualizarContador(total, termoBusca = "") {
   }
 
   contador.textContent = `${total} serviços encontrados.`;
-}
+};

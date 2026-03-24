@@ -47,8 +47,30 @@ function destacarTitulo(textoOriginal, termoBusca) {
   return textoOriginal.replace(regex, match => {
     return `<span class="destaque-texto">${match}</span>`;
   });
-}
+};
 
+function linkificarTexto(texto) {
+  if (!texto) return texto;
+
+  const urlRegex =
+    /((https?:\/\/|www\.)[^\s]+)/g;
+
+  return texto.replace(urlRegex, (url) => {
+    const href = url.startsWith("http")
+      ? url
+      : `https://${url}`;
+
+    return `
+      <a
+        href="${href}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="link-detectado"
+      >
+        ${url}
+      </a>
+`});
+};
 
 /* =========================
    CARREGAMENTO
@@ -272,6 +294,8 @@ function renderizarServicos(lista) {
     const tituloServico =
       registro[CHAVE_SERVICO] || "Serviço";
 
+      
+
     /* =========================
        MONTA HTML
     ========================== */
@@ -304,7 +328,7 @@ function renderizarServicos(lista) {
                   ${chave}
                 </div>
                 <div class="col-12 col-md-8">
-                  ${valor}
+                  ${linkificarTexto(valor)}
                 </div>
               </div>
             `).join("")}
@@ -314,6 +338,21 @@ function renderizarServicos(lista) {
 
     container.appendChild(item);
   });
+};
+
+// indicar serviço online
+function possuiSolicitacaoOnline(registro) {
+  const texto = (
+    registro[COLUNAS.formaSolicitacao] || ""
+  ).toLowerCase();
+
+  return (
+    texto.includes("online") ||
+    texto.includes("eletr") ||
+    texto.includes("internet") ||
+    texto.includes("digital") ||
+    texto.includes("protocolo")
+  );
 };
 
 

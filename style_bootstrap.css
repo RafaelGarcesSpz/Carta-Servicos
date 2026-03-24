@@ -201,6 +201,12 @@
   justify-content: center;
 }
 
+
+.link-detectado {
+  color: #0b4da2;
+  text-decoration:underline;
+}
+
 /* MOBILE */
 @media (max-width: 768px) {
   .search-retratil {

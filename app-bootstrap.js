@@ -14,6 +14,8 @@ let dados = [];
   const CHAVE_DESCRICAO =
    "Descrição";
 
+   const CHAVE_SOLICITACAO = "Forma de solicitação";
+
   const btnToggleSearch = document.getElementById("btnToggleSearch");
   const btnConfirmarBusca = document.getElementById("btnConfirmarBusca");
   const searchContainer = document.querySelector(".search-retratil");
@@ -291,10 +293,21 @@ function renderizarServicos(lista) {
     /* =========================
        TÍTULO DO SERVIÇO (SEM DESTAQUE DE TEXTO)
     ========================== */
-    const tituloServico =
-      registro[CHAVE_SERVICO] || "Serviço";
+    const tituloServico = registro[CHAVE_SERVICO] || "Serviço";
 
-      
+     
+    const temOnline = possuiSolicitacaoOnline(registro);
+
+    const iconeOnline = temOnline
+      ? `
+        <i
+          class="bi bi-globe ms-2 text-success"
+          title="Serviço disponível online"
+          aria-label="Serviço disponível online"
+        ></i>
+      `
+      : "";
+    
 
     /* =========================
        MONTA HTML
@@ -309,7 +322,11 @@ function renderizarServicos(lista) {
           aria-expanded="false"
           aria-controls="${collapseId}"
         >
+          <span class="flex-grow-1">
           ${tituloServico}
+          </span>
+          ${iconeOnline}
+
         </button>
       </h2>
 
@@ -343,7 +360,7 @@ function renderizarServicos(lista) {
 // indicar serviço online
 function possuiSolicitacaoOnline(registro) {
   const texto = (
-    registro[COLUNAS.formaSolicitacao] || ""
+    registro[CHAVE_SOLICITACAO] || ""
   ).toLowerCase();
 
   return (

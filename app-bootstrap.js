@@ -3,22 +3,20 @@ let dados = [];
 /* =========================
    CHAVES DO JSON (EXCEL)
 ========================= */
-const CHAVE_SECRETARIA =
-  "0.1 - Unidade prestadora do serviço – Secretaria (art. 7º, §1º)";
+  const CHAVE_SECRETARIA =
+    "Secretaria";
+  const CHAVE_UNIDADE =
+   "Departamento";
+  const CHAVE_SERVICO =
+    "Nome do serviço";
+  const CHAVE_NOME_POPULAR =
+    " Nomes populares";
+  const CHAVE_DESCRICAO =
+   "Descrição";
 
-const CHAVE_UNIDADE =
-  "0.2 - Unidade/Departamento responsável (art. 7º, §1º)";
-
-const CHAVE_SERVICO =
-  "1 - Nome do serviço (art. 7º, §2º, I)";
-
-  
-const CHAVE_NOME_POPULAR =
-  "1.1 - Nomes populares do serviço (art. 7º, §2º, I)";
-
-
-const CHAVE_DESCRICAO =
-  "2 - Descrição do serviço (art. 7º, §1º; §2º, I)";
+  const btnToggleSearch = document.getElementById("btnToggleSearch");
+  const btnConfirmarBusca = document.getElementById("btnConfirmarBusca");
+  const searchContainer = document.querySelector(".search-retratil");
 
 //Normalizar texto para pesquisar digitação errada
 
@@ -55,7 +53,7 @@ function destacarTitulo(textoOriginal, termoBusca) {
 /* =========================
    CARREGAMENTO
 ========================= */
-fetch("servicos.json")
+fetch("servicos_v2.json")
   .then(res => res.json())
   .then(json => {
     dados = json;
@@ -88,6 +86,7 @@ function atualizarEstadoFiltros() {
     filtroServico.value = "";
   }
 };
+
 /* =========================
    FILTROS ANINHADOS
 ========================= */
@@ -336,3 +335,35 @@ function atualizarContador(total, termoBusca = "") {
 
   contador.textContent = `${total} serviços encontrados.`;
 };
+
+btnToggleSearch.addEventListener("click", () => {
+  const ativo = searchContainer.classList.toggle("ativo");
+  const icon = btnToggleSearch.querySelector("i");
+
+  if (ativo) {
+    icon.classList.replace("bi-search", "bi-x");
+    buscaServico.focus();
+  } else {
+    icon.classList.replace("bi-x", "bi-search");
+    buscaServico.value = "";
+    aplicarFiltros();
+    atualizarIndicadorFiltros();
+  }
+});
+
+btnConfirmarBusca.addEventListener("click", () => {
+  aplicarFiltros();
+  atualizarIndicadorFiltros();
+});
+
+buscaServico.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    aplicarFiltros();
+    atualizarIndicadorFiltros();
+  }
+});
+
+
+// GARANTIA DE ESTADO INICIAL
+searchContainer.classList.remove("ativo");

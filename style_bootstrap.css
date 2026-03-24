@@ -180,3 +180,47 @@
   text-align: center;
 }
 
+/* CONTAINER */
+.search-retratil {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* INPUT OCULTO POR PADRÃO */
+.search-input {
+  width: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: width 0.3s ease, opacity 0.2s ease;
+}
+
+/* CONFIRMAR OCULTO POR PADRÃO (FORÇADO) */
+.search-retratil .btn-confirmar {
+  display: none !important;
+}
+
+/* ESTADO ATIVO */
+.search-retratil.ativo .search-input {
+  width: 100%;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* CONFIRMAR APARECE SOMENTE QUANDO ATIVO */
+.search-retratil.ativo .btn-confirmar {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .search-retratil {
+    flex-wrap: wrap;
+  }
+
+  .search-retratil.ativo .search-input {
+    width: 100%;
+  }
+}

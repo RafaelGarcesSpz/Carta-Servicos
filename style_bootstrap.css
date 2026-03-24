@@ -75,8 +75,10 @@
    LINHAS ALTERNADAS NO ACCORDION
 ========================= */
 .accordion-body .row {
+  align-items: center;
   padding: 6px 4px;
   border-radius: 4px;
+
 }
 
 /* linhas pares */

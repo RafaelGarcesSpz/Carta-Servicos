@@ -14,11 +14,17 @@ let dados = [];
   const CHAVE_DESCRICAO =
    "Descrição";
 
-   const CHAVE_SOLICITACAO = "Forma de solicitação";
+  const CHAVE_SOLICITACAO = "Forma de solicitação";
+
+  const CHAVE_LINK = "";
+
+  const LINK_ONLINE_TESTE = "https://www.sapezal.mt.gov.br/portal/servicos/53/protocolo-central/";
 
   const btnToggleSearch = document.getElementById("btnToggleSearch");
   const btnConfirmarBusca = document.getElementById("btnConfirmarBusca");
   const searchContainer = document.querySelector(".search-retratil");
+
+  let filtroModalidade = "todos";
 
 //Normalizar texto para pesquisar digitação errada
 
@@ -110,6 +116,79 @@ function atualizarEstadoFiltros() {
     filtroServico.value = "";
   }
 };
+
+class Solicitacao {
+  constructor(registro) {
+    this.forma = (registro[CHAVE_SOLICITACAO] || "").toLowerCase();
+
+    // usa link real do JSON ou, se não existir, o link de teste
+    this.linkOnline =
+      registro[CHAVE_LINK] || LINK_ONLINE_TESTE || null;
+  }
+
+  isOnline() {
+    return (
+      this.forma.includes("online") ||
+      this.forma.includes("digital") ||
+      this.forma.includes("internet") ||
+      this.forma.includes("protocolo")
+    );
+  }
+
+  isPresencial() {
+    return this.forma.includes("presencial");
+  }
+
+  atendeModalidade(filtro) {
+    if (filtro === "todos") return true;
+    if (filtro === "online") return this.isOnline();
+    if (filtro === "presencial") return this.isPresencial();
+    return true;
+  }
+
+  /**
+   * Gera os ícones com tooltip e link (quando houver)
+   */
+  renderIcones() {
+    let html = "";
+
+    // ✅ ÍCONE ONLINE (COM LINK + TOOLTIP)
+    if (this.isOnline()) {
+      html += `
+        <a
+          href="${this.linkOnline}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-success ms-2"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+          title="Solicitar serviço online"
+          aria-label="Solicitar serviço online"
+        >
+          <i class="bi bi-globe"></i>
+        </a>
+      `;
+    }
+
+    // ✅ ÍCONE PRESENCIAL (COM TOOLTIP)
+    if (this.isPresencial()) {
+      html += `
+        <span
+          class="text-primary ms-2"
+          data-bs-toggle="tooltip"
+          data-bs-placement="top"
+          title="Atendimento presencial"
+          aria-label="Atendimento presencial"
+        >
+          <i class="bi bi-building"></i>
+        </span>
+      `;
+    }
+
+    return html;
+  }
+}
+
 
 /* =========================
    FILTROS ANINHADOS
@@ -216,36 +295,50 @@ function onUnidadeChange() {
 // aplicar os filtros de busca
 
 function aplicarFiltros() {
-  const secretaria = filtroSecretaria.value;
-  const unidade = filtroUnidade.value;
-  const servico = filtroServico.value;
-  
-
-  const termoBusca = normalizarTexto(
-    document.getElementById("buscaServico").value
-  );
-
   const filtrados = dados.filter(d => {
 
-    const nomeServico = normalizarTexto(d[CHAVE_SERVICO]);
+    // 1. filtros hierárquicos
+    if (filtroSecretaria.value &&
+        d[CHAVE_SECRETARIA] !== filtroSecretaria.value) {
+      return false;
+    }
 
-    const atendeBusca =
-      !termoBusca || nomeServico.includes(termoBusca);
+    if (filtroUnidade.value &&
+        d[CHAVE_UNIDADE] !== filtroUnidade.value) {
+      return false;
+    }
 
-    return (
-      (!secretaria || d[CHAVE_SECRETARIA] === secretaria) &&
-      (!unidade || d[CHAVE_UNIDADE] === unidade) &&
-      (!servico || d[CHAVE_SERVICO] === servico) &&
-      atendeBusca
-    );
+    if (filtroServico.value &&
+        d[CHAVE_SERVICO] !== filtroServico.value) {
+      return false;
+    }
+
+    // 2. filtro de modalidade (BADGES)
+    const solicitacao = new Solicitacao(d);
+    if (!solicitacao.atendeModalidade(filtroModalidade)) {
+      return false;
+    }
+
+    // 3. busca textual
+    const termo = normalizarTexto(buscaServico.value);
+    if (termo) {
+      const titulo = normalizarTexto(d[CHAVE_SERVICO]);
+      if (!titulo.includes(termo)) {
+        return false;
+      }
+    }
+
+    return true;
   });
 
   renderizarServicos(filtrados);
   atualizarContador(filtrados.length, buscaServico.value);
+  atualizarIndicadorFiltros();
+}
 
-};
 
-
+    // reaplica filtros
+   
 
 /* =========================
    ACCORDION BOOTSTRAP
@@ -293,20 +386,13 @@ function renderizarServicos(lista) {
     /* =========================
        TÍTULO DO SERVIÇO (SEM DESTAQUE DE TEXTO)
     ========================== */
+    const solicitacao = new Solicitacao(registro);
+
     const tituloServico = registro[CHAVE_SERVICO] || "Serviço";
+    const iconesServico = solicitacao.renderIcones();
 
      
-    const temOnline = possuiSolicitacaoOnline(registro);
-
-    const iconeOnline = temOnline
-      ? `
-        <i
-          class="bi bi-globe ms-2 text-success"
-          title="Serviço disponível online"
-          aria-label="Serviço disponível online"
-        ></i>
-      `
-      : "";
+  
     
 
     /* =========================
@@ -325,7 +411,7 @@ function renderizarServicos(lista) {
           <span class="flex-grow-1">
           ${tituloServico}
           </span>
-          ${iconeOnline}
+          ${iconesServico}
 
         </button>
       </h2>
@@ -423,3 +509,67 @@ buscaServico.addEventListener("keydown", (e) => {
 
 // GARANTIA DE ESTADO INICIAL
 searchContainer.classList.remove("ativo");
+
+
+
+document.querySelectorAll(".filtro-modalidade").forEach(badge => {
+
+  badge.addEventListener("click", () => {
+
+    // remove ativo de todas
+    document.querySelectorAll(".filtro-modalidade").forEach(b => {
+      b.classList.remove("ativo");
+      b.setAttribute("aria-pressed", "false");
+    });
+
+    // ativa a clicada
+    badge.classList.add("ativo");
+    badge.setAttribute("aria-pressed", "true");
+
+    // atualiza estado
+    filtroModalidade = badge.dataset.modalidade;
+
+    // reaplica filtros
+    aplicarFiltros();
+  });
+});
+
+console.log(filtroModalidade);
+
+function atualizarIndicadorFiltros() {
+  let total = 0;
+
+  // busca textual
+  if (buscaServico && buscaServico.value.trim()) total++;
+
+  // filtros select
+  if (filtroSecretaria && filtroSecretaria.value) total++;
+  if (filtroUnidade && filtroUnidade.value) total++;
+  if (filtroServico && filtroServico.value) total++;
+
+  // filtro por modalidade (badges)
+  if (typeof filtroModalidade !== "undefined" && filtroModalidade !== "todos") {
+    total++;
+  }
+
+  const indicador = document.getElementById("indicadorFiltros");
+  if (!indicador) return;
+
+  if (total === 0) {
+    indicador.textContent = "Nenhum filtro aplicado.";
+  } else if (total === 1) {
+    indicador.textContent = "1 filtro aplicado.";
+  } else {
+    indicador.textContent = `${total} filtros aplicados.`;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const tooltipTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  );
+
+  tooltipTriggerList.forEach(el => {
+    new bootstrap.Tooltip(el);
+  });
+});

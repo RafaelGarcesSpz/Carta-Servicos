@@ -104,6 +104,43 @@
         </select>
       </div>
 
+      <!--  ADICIONAR BADGE   -->
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+
+          <!-- TODOS -->
+          <span
+            class="badge bg-secondary filtro-modalidade ativo"
+            role="button"
+            data-modalidade="todos"
+            aria-pressed="true"
+          >
+            Todos
+          </span>
+
+          <!-- ONLINE -->
+          <span
+            class="badge bg-success filtro-modalidade"
+            role="button"
+            data-modalidade="online"
+            aria-pressed="false"
+          >
+            <i class="bi bi-globe me-1"></i>
+            Online
+          </span>
+
+          <!-- PRESENCIAL -->
+          <span
+            class="badge bg-primary filtro-modalidade"
+            role="button"
+            data-modalidade="presencial"
+            aria-pressed="false"
+          >
+            <i class="bi bi-building me-1"></i>
+            Presencial
+          </span>
+        </div>
+
+
       <!-- LIMPAR FILTROS -->
       <div class="col-12 col-lg-2 d-grid">
         <button
@@ -114,7 +151,6 @@
           Limpar filtros
         </button>
       </div>
-
   </div>
 </div>
 
